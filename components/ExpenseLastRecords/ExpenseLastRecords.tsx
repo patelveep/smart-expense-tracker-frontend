@@ -44,7 +44,7 @@ const ExpenseTable = () => {
   return (
     <div className="col-span-12 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 shadow-lg dark:border-gray-700 dark:from-gray-800 dark:to-gray-900 sm:p-8 xl:col-span-5">
       <h5 className="mb-5 text-2xl font-semibold text-gray-800 dark:text-gray-200">
-        Last 10 Records
+        Last few Records
       </h5>
       <div className="overflow-x-auto">
         <table className="min-w-full table-auto divide-y divide-gray-200 text-sm text-gray-700 dark:divide-gray-700 dark:text-gray-300">

@@ -101,8 +101,8 @@ const Header = (props: {
         <div className="flex items-center gap-3 2xsm:gap-7">
             <ul className="flex items-center gap-2 2xsm:gap-4">
             {document.cookie
-              .split("; ")
-              .find((row) => row.startsWith("email="))
+              ?.split("; ")
+              ?.find((row) => row.startsWith("email="))
               ?.split("=")[1] || "No email found"}
             </ul>
 

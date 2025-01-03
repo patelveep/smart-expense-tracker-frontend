@@ -15,7 +15,7 @@ interface SidebarProps {
 
 const menuGroups = [
   {
-    name: "MENU",
+    name: "Track My Spend ",
     menuItems: [
       {
         icon: (
