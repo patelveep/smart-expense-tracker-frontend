@@ -1,5 +1,6 @@
 "use client";
 
+import { formatCurrency } from "@/utils/currency";
 import React, { useEffect, useState } from "react";
 
 const ExpenseTable = () => {
@@ -8,12 +9,15 @@ const ExpenseTable = () => {
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        const response = await fetch("http://localhost:5000/expenses?page=1&pageSize=10", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://localhost:5000/expenses?page=1&pageSize=10",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch categories");
@@ -50,20 +54,20 @@ const ExpenseTable = () => {
               <th className="px-4 py-3 text-left font-medium">Expense Name</th>
               <th className="px-4 py-3 text-left font-medium">Description</th>
               <th className="px-4 py-3 text-left font-medium">Category</th>
-              <th className="px-4 py-3 text-right font-medium">Amount ($)</th>
+              <th className="px-4 py-3 text-right font-medium">Amount</th>
               <th className="px-4 py-3 text-left font-medium">Date</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
             {records.length > 0 ? (
-              records.map((record) => (
+              records.map((record, index) => (
                 <tr key={record.id}>
-                  <td className="px-4 py-3">{record.id}</td>
+                  <td className="px-4 py-3">{index + 1}</td>
                   <td className="px-4 py-3">{record.expenseName}</td>
                   <td className="px-4 py-3">{record.description}</td>
                   <td className="px-4 py-3">{record.category}</td>
                   <td className="px-4 py-3 text-right">
-                    {record.amount.toFixed(2)}
+                    {formatCurrency(record.amount)}
                   </td>
                   <td className="px-4 py-3">{record.date}</td>
                 </tr>

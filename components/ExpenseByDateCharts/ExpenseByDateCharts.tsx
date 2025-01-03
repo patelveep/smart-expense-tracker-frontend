@@ -1,4 +1,5 @@
 "use client";
+import { formatCurrency } from "@/utils/currency";
 import { ApexOptions } from "apexcharts";
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
@@ -203,28 +204,30 @@ const ExpenseBarChart = () => {
             series={series}
             type="bar"
             height={350}
-            width={"100%"}
+            width={400}
           />
         </div>
       </div>
 
       {/* Uncomment and modify if you want to display additional information */}
       <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6">
-        {data?.map((item, index) => (
-          <div
-            key={index}
-            className="flex items-center space-x-3 rounded-lg bg-gray-700 p-4"
-          >
-            <span
-              className="block h-4 w-4 rounded-full"
-              style={{ backgroundColor: options.colors[index] }}
-            ></span>
-            <p className="flex flex-1 justify-between text-sm font-medium text-gray-200">
-              <span>{item.month}</span>
-              <span>${item.expense}</span>
-            </p>
-          </div>
-        ))}
+        {data?.map((item, index) =>
+          item.expense ? (
+            <div
+              key={index}
+              className="flex items-center space-x-3 rounded-lg bg-gray-700 p-4"
+            >
+              <span
+                className="block h-4 w-4 rounded-full"
+                style={{ backgroundColor: options.colors[index] }}
+              ></span>
+              <p className="flex flex-1 justify-between text-sm font-medium text-gray-200">
+                <span>{item.month}</span>
+                <span>{formatCurrency(item.expense)}</span>
+              </p>
+            </div>
+          ) : null
+        )}
       </div>
     </div>
   );
