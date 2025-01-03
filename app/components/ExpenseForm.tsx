@@ -166,7 +166,9 @@ const ExpenseForm = ({ initialData = {}, onSubmit, buttonLabel }) => {
           required
         />
       </div>
-      <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700" disabled={!isFormValid}>{buttonLabel}</button>
+      <button type="submit"  className={`w-full px-4 py-2 font-bold text-white rounded-md ${
+          isFormValid ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-gray-400 cursor-not-allowed'
+        }`} disabled={!isFormValid}>{buttonLabel}</button>
     </form>
   );
 };
