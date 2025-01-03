@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-const ExpenseForm = ({ initialData = {}, onSubmit }) => {
+const ExpenseForm = ({ initialData = {}, onSubmit, buttonLabel }) => {
   const [expenseName, setExpenseName] = useState(initialData.expenseName || '');
   const [expenseAmount, setExpenseAmount] = useState(initialData.expenseAmount || '');
   const [categoryId, setCategoryId] = useState(initialData.categoryId || '');
@@ -11,6 +11,7 @@ const ExpenseForm = ({ initialData = {}, onSubmit }) => {
   const [description, setDescription] = useState(initialData.description || '');
   const [amountError, setAmountError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const MAX_AMOUNT = 999999;
   const MAX_DESCRIPTION_LENGTH = 500;
@@ -25,6 +26,19 @@ const ExpenseForm = ({ initialData = {}, onSubmit }) => {
     { id: 7, value: 'education', label: 'Education' },
     { id: 8, value: 'other', label: 'Other' },
   ];
+
+
+  useEffect(() => {
+    const isValid =
+      expenseName &&
+      expenseAmount &&
+      categoryId &&
+      expenseDate &&
+      description &&
+      !amountError &&
+      !descriptionError;
+    setIsFormValid(isValid);
+  }, [expenseName, expenseAmount, categoryId, expenseDate, description, amountError, descriptionError]);
 
 
   const handleInput = (e) => {
@@ -152,7 +166,7 @@ const ExpenseForm = ({ initialData = {}, onSubmit }) => {
           required
         />
       </div>
-      <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700">Save Expense</button>
+      <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700" disabled={!isFormValid}>{buttonLabel}</button>
     </form>
   );
 };
