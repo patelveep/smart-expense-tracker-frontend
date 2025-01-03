@@ -1,6 +1,6 @@
 "use client";
 import { ApexOptions } from "apexcharts";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 
 // Function to generate repeating colors
@@ -26,44 +26,74 @@ const generateRepeatingColors = (num) => {
     "#9E9E9E",
     "#607D8B",
   ];
-  return Array.from({ length: num }, (_, i) => materialColors[i % materialColors.length]);
+  return Array.from(
+    { length: num },
+    (_, i) => materialColors[i % materialColors.length]
+  );
 };
+
+function getMonthName(monthNumber) {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  if (monthNumber < 1 || monthNumber > 12) {
+    return "Invalid month number"; // Handle invalid input
+  }
+
+  return months[monthNumber - 1];
+}
 
 const ExpenseBarChart = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("monthly");
 
-  // Updated data with month names
-  const monthlyData = [
-    { month: "Jan", expense: 400 },
-    { month: "Feb", expense: 200 },
-    { month: "Mar", expense: 150 },
-    { month: "Apr", expense: 100 },
-    { month: "May", expense: 300 },
-    { month: "Jun", expense: 250 },
-    { month: "Jul", expense: 180 },
-    { month: "Aug", expense: 220 },
-    { month: "Sep", expense: 170 },
-    { month: "Oct", expense: 190 },
-    { month: "Nov", expense: 210 },
-    { month: "Dec", expense: 230 },
-  ];
+  const [data, setData] = useState([]);
 
-  const yearlyData = [
-    { month: "Jan", expense: 4800 },
-    { month: "Feb", expense: 2400 },
-    { month: "Mar", expense: 1800 },
-    { month: "Apr", expense: 1200 },
-    { month: "May", expense: 3600 },
-    { month: "Jun", expense: 3000 },
-    { month: "Jul", expense: 2160 },
-    { month: "Aug", expense: 2640 },
-    { month: "Sep", expense: 2040 },
-    { month: "Oct", expense: 2280 },
-    { month: "Nov", expense: 2520 },
-    { month: "Dec", expense: 2760 },
-  ];
+  useEffect(() => {
+    const fetchMonth = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/getSummary?year=2025",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-  const data = selectedPeriod === "monthly" ? monthlyData : yearlyData;
+        if (!response.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+
+        const data = await response.json();
+        const cat = data?.groupedByMonth?.map((cat) => {
+          return {
+            month: getMonthName(cat.month),
+            expense: cat.totalAmount,
+          };
+        });
+
+        console.log("cat", cat);
+        setData(cat);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchMonth();
+  }, [selectedPeriod]);
 
   const options: ApexOptions = {
     chart: {
@@ -84,7 +114,7 @@ const ExpenseBarChart = () => {
       background: "#1F2937", // Dark background for the chart
       foreColor: "#D1D5DB", // Light text color for axes and labels
     },
-    colors: generateRepeatingColors(data.length),
+    colors: generateRepeatingColors(data?.length),
     plotOptions: {
       bar: {
         horizontal: false,
@@ -93,7 +123,7 @@ const ExpenseBarChart = () => {
       },
     },
     xaxis: {
-      categories: data.map((item) => item.month),
+      categories: data?.map((item) => item?.month),
       title: {
         text: "Months",
         style: {
@@ -154,39 +184,33 @@ const ExpenseBarChart = () => {
   const series = [
     {
       name: "Expenses",
-      data: data.map((item) => item.expense),
+      data: data?.map((item) => item?.expense),
     },
   ];
-
-  const handlePeriodChange = (event) => {
-    setSelectedPeriod(event.target.value);
-  };
 
   return (
     <div className="col-span-12 rounded-lg border border-gray-700 bg-gray-800 px-6 py-6 shadow-lg sm:px-8 xl:col-span-5">
       <div className="mb-5 flex items-center justify-between">
         <h5 className="text-2xl font-semibold text-gray-200">
-          Expense by {selectedPeriod.charAt(0).toUpperCase() + selectedPeriod.slice(1)}
+          Expense by Month
         </h5>
-        <select
-          value={selectedPeriod}
-          onChange={handlePeriodChange}
-          className="rounded-md border border-gray-600 bg-gray-700 py-2 px-4 text-sm text-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="monthly">Monthly</option>
-          <option value="yearly">Yearly</option>
-        </select>
       </div>
 
       <div className="mb-6">
         <div id="barChart" className="mx-auto flex justify-center w-full">
-          <ReactApexChart options={options} series={series} type="bar" height={350} width={600} />
+          <ReactApexChart
+            options={options}
+            series={series}
+            type="bar"
+            height={350}
+            width={"100%"}
+          />
         </div>
       </div>
 
       {/* Uncomment and modify if you want to display additional information */}
       <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6">
-        {data.map((item, index) => (
+        {data?.map((item, index) => (
           <div
             key={index}
             className="flex items-center space-x-3 rounded-lg bg-gray-700 p-4"

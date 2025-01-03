@@ -33,7 +33,6 @@ const generateRepeatingColors = (num) => {
 };
 
 const ExpenseByCatCharts = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState("monthly");
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -66,7 +65,7 @@ const ExpenseByCatCharts = () => {
     };
 
     fetchCategories();
-  }, [selectedPeriod]);
+  }, []);
 
   const options: ApexOptions = {
     chart: {
@@ -112,26 +111,12 @@ const ExpenseByCatCharts = () => {
 
   const series = categories?.map((cat) => cat.expense);
 
-  const handlePeriodChange = (event) => {
-    setSelectedPeriod(event.target.value);
-    // Perform any additional actions based on the selected period
-    console.log(`Selected period: ${event.target.value}`);
-  };
-
   return (
     <div className="col-span-12 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 px-6 py-6 shadow-lg dark:border-gray-700 dark:from-gray-800 dark:to-gray-900 sm:px-8 xl:col-span-5">
       <div className="mb-5 flex items-center justify-between">
         <h5 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
           Expense by Categories
         </h5>
-        <select
-          value={selectedPeriod}
-          onChange={handlePeriodChange}
-          className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm text-gray-700 shadow-sm dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300"
-        >
-          <option value="monthly">Monthly</option>
-          <option value="yearly">Yearly</option>
-        </select>
       </div>
 
       <div className="mb-6">
