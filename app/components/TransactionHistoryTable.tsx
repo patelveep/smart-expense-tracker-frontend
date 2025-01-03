@@ -120,6 +120,7 @@ export default function TransactionHistoryTable() {
       
       put('/expenses/' + transactionToDelete, {
         isActive: false,
+        isDeleted:true,
         ...transactionDelete.rawData
       })
         .then((res) => {
