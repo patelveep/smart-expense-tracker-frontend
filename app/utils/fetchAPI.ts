@@ -57,3 +57,12 @@ export async function patch(endpoint: string, data: any) {
         body: JSON.stringify(data),
     });
 }
+export async function put(endpoint: string, data: any) {
+    return fetchAPI(endpoint, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+}
