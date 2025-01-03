@@ -1,15 +1,25 @@
 "use client"
 
-import React from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { post } from '../utils/fetchAPI';
 import { useRouter } from 'next/navigation';
 import ExpenseForm from '../components/ExpenseForm';
+import { fetchAPI } from '../utils/fetchAPI';
 const AddExpensePage = () => {
   const router = useRouter();
 
+  useEffect(() => {
+    fetchAPI('/transactions').then(res=>{
+     console.log('res',res)
+    }).catch(err=>{
+     console.log('err',err)
+    }) 
+    
+   }, [])
+
   const handleSubmit = async (data) => {
     try {
-      const response = await axios.post('http://localhost:5000/expenses', {
+      const response = await post('/expenses', {
         name: data.expenseName,
         userId: 0, // Replace with actual user ID if available
         categoryId: data.categoryId,

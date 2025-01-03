@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { get, put } from '../../utils/fetchAPI';
 import { useRouter, useParams } from 'next/navigation';
 import ExpenseForm from '../../components/ExpenseForm';
 
@@ -13,8 +13,8 @@ const UpdateExpensePage = () => {
   useEffect(() => {
     const fetchExpense = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/expenses/${expenseId}`);
-        setInitialData(response.data);
+        const response = await get(`/expenses/${expenseId}`);
+        setInitialData(response);
       } catch (error) {
         console.error('There was an error fetching the expense!', error);
       }
@@ -27,7 +27,7 @@ const UpdateExpensePage = () => {
 
   const handleSubmit = async (data) => {
     try {
-      const response = await axios.put(`http://localhost:5000/expenses/${expenseId}`, {
+      const response = await put(`/expenses/${expenseId}`, {
         name: data.expenseName,
         userId: 0, // Replace with actual user ID if available
         categoryId: data.categoryId,
@@ -36,7 +36,7 @@ const UpdateExpensePage = () => {
         description: data.description
       });
       console.log(response.data);
-      if (response.status === 200) {
+      if (response) {
         router.push('/expenses');
       }
     } catch (error) {

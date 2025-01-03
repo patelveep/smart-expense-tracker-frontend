@@ -10,9 +10,11 @@ const ExpenseForm = ({ initialData = {}, onSubmit }) => {
   const [expenseDate, setExpenseDate] = useState(initialData.expenseDate || '');
   const [description, setDescription] = useState(initialData.description || '');
   const [amountError, setAmountError] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
 
   const MAX_AMOUNT = 999999;
-  
+  const MAX_DESCRIPTION_LENGTH = 500;
+
   const categories = [
     { id: 1, value: 'food', label: 'Food' },
     { id: 2, value: 'housing', label: 'Housing' },
@@ -40,7 +42,16 @@ const ExpenseForm = ({ initialData = {}, onSubmit }) => {
       }
       setExpenseAmount(validValue);
       e.target.value = validValue;
-    } else {
+    } else if (id === 'description') {
+        // Ensure the description does not exceed the maximum length
+        if (value.length > MAX_DESCRIPTION_LENGTH) {
+          setDescriptionError(`Description cannot exceed ${MAX_DESCRIPTION_LENGTH} characters`);
+        } else {
+          setDescriptionError(''); // Clear error if valid
+        }
+        setDescription(value);
+      }
+     else {
       // Remove special characters for other inputs
       const validValue = value.replace(/[^a-zA-Z0-9\s]/g, '');
       e.target.value = validValue;
@@ -136,6 +147,7 @@ const ExpenseForm = ({ initialData = {}, onSubmit }) => {
           className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200 text-gray-700"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          maxLength={MAX_DESCRIPTION_LENGTH}
           onInput={handleInput}
           required
         />
