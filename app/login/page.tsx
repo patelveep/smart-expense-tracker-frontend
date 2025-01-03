@@ -27,6 +27,9 @@ const LoginPage = () => {
         password
       });
       console.log(response.data);
+      document.cookie = `token=${response.data.accessToken}; path=/; max-age=${response.data.expiresIn}`;
+      document.cookie = `refresh_token=${response.data.refreshToken}; path=/; max-age=${30 * 24 * 60 * 60}`; // Assuming refresh token is valid for 30 days
+      router.push('/'); // Redirect to dashboard after successful login
       // Handle successful login here
     } catch (error) {
       if (error.response && error.response.data && error.response.data.errors) {
@@ -40,7 +43,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-pink-500 via-purple-500 to-indigo-500">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
         <h2 className="text-2xl font-bold text-center">Login</h2>
         {message && <div className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded">{message}</div>}
