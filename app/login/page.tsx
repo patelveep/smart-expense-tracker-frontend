@@ -28,6 +28,7 @@ const LoginPage = () => {
       });
       console.log(response.data);
       document.cookie = `token=${response.data.accessToken}; path=/; max-age=${response.data.expiresIn}`;
+      document.cookie = `email=${email}; path=/; max-age=${response.data.expiresIn}`;
       document.cookie = `refresh_token=${response.data.refreshToken}; path=/; max-age=${30 * 24 * 60 * 60}`; // Assuming refresh token is valid for 30 days
       router.push('/'); // Redirect to dashboard after successful login
       // Handle successful login here

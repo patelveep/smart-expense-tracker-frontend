@@ -2,30 +2,32 @@
 
 import React, { useState, useEffect } from 'react';
 
+
+const categories = [
+  { id: 1, value: 'food', label: 'Food' },
+  { id: 2, value: 'housing', label: 'Housing' },
+  { id: 3, value: 'transportation', label: 'Transportation' },
+  { id: 4, value: 'utilities', label: 'Utilities' },
+  { id: 5, value: 'healthcare', label: 'Healthcare' },
+  { id: 6, value: 'entertainment', label: 'Entertainment' },
+  { id: 7, value: 'education', label: 'Education' },
+  { id: 8, value: 'other', label: 'Other' },
+];
+
 const ExpenseForm = ({ initialData = {}, onSubmit, buttonLabel }) => {
-  const [expenseName, setExpenseName] = useState(initialData.expenseName || '');
-  const [expenseAmount, setExpenseAmount] = useState(initialData.expenseAmount || '');
-  const [categoryId, setCategoryId] = useState(initialData.categoryId || '');
-  const [category, setCategory] = useState(initialData.category || '');
-  const [expenseDate, setExpenseDate] = useState(initialData.expenseDate || '');
+  const [expenseName, setExpenseName] = useState(initialData.name || '');
+  const [expenseAmount, setExpenseAmount] = useState(initialData.amount || '');
+  const [categoryId, setCategoryId] = useState((initialData.categoryId) || '');
+  const [category, setCategory] = useState(categories.find(i=> i.id===(initialData.categoryId))?.value || '');
+  const [expenseDate, setExpenseDate] = useState(initialData.date ? new Date(initialData.date).toISOString().split('T')[0] : '');
   const [description, setDescription] = useState(initialData.description || '');
   const [amountError, setAmountError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
 
+  console.log({category})
   const MAX_AMOUNT = 999999;
   const MAX_DESCRIPTION_LENGTH = 500;
-
-  const categories = [
-    { id: 1, value: 'food', label: 'Food' },
-    { id: 2, value: 'housing', label: 'Housing' },
-    { id: 3, value: 'transportation', label: 'Transportation' },
-    { id: 4, value: 'utilities', label: 'Utilities' },
-    { id: 5, value: 'healthcare', label: 'Healthcare' },
-    { id: 6, value: 'entertainment', label: 'Entertainment' },
-    { id: 7, value: 'education', label: 'Education' },
-    { id: 8, value: 'other', label: 'Other' },
-  ];
 
 
   useEffect(() => {

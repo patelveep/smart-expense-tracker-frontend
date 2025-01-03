@@ -12,6 +12,7 @@ const AddExpensePage = () => {
   useEffect(() => {
     fetchAPI('/transactions').then(res=>{
      console.log('res',res)
+     
     }).catch(err=>{
      console.log('err',err)
     }) 
@@ -28,9 +29,9 @@ const AddExpensePage = () => {
         date: new Date(data.expenseDate).toISOString(),
         description: data.description
       });
-      console.log(response.data);
-      if (response.status === 200) {
-        router.push('/expenses');
+      console.log(response);
+      if (response.id ) {
+        router.push('/transactions');
       }
     } catch (error) {
       console.error('There was an error!', error);

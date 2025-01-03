@@ -11,6 +11,7 @@ const UpdateExpensePage = () => {
   const router = useRouter();
   const { id: expenseId } = useParams();
 
+  console.log({initialData})
   useEffect(() => {
     const fetchExpense = async () => {
       try {
@@ -34,11 +35,13 @@ const UpdateExpensePage = () => {
         categoryId: data.categoryId,
         amount: parseFloat(data.expenseAmount),
         date: new Date(data.expenseDate).toISOString(),
-        description: data.description
+        description: data.description,
+        isDeleted:false,
+  "isActive": true,
       });
       console.log(response.data);
       if (response) {
-        router.push('/expenses');
+        router.push('/transactions');
       }
     } catch (error) {
       console.error('There was an error!', error);

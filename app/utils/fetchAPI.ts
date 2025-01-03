@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://api.example.com';
+const API_BASE_URL = 'http://localhost:5000';
 
 function getTokenFromCookies() {
     const name = 'token=';
@@ -31,7 +31,20 @@ export async function fetchAPI(endpoint: string, options: RequestInit = {}) {
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return response.json();
+    console.log({response})
+
+    if(response.status === 204) {
+        return {
+            status: 204,
+            data: {}
+        }
+    }
+    try {
+        return response.json();
+    } catch (error) {
+        console.log({error})
+        return {}
+    }
 }
 
 export async function get(endpoint: string) {
@@ -57,6 +70,7 @@ export async function patch(endpoint: string, data: any) {
         body: JSON.stringify(data),
     });
 }
+
 export async function put(endpoint: string, data: any) {
     return fetchAPI(endpoint, {
         method: 'PUT',

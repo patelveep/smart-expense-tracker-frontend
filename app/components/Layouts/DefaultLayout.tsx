@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Sidebar from "../Sidebar";
 // import Header from "@/components/Header";
 import Cookies from "js-cookie";
+import Header from "@/app/Header";
 
 export default function DefaultLayout({
   children,
@@ -26,7 +27,7 @@ export default function DefaultLayout({
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         
         <div className="relative flex flex-1 flex-col lg:ml-72.5">
-         
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <main>
             <div style={{
               marginLeft:'220px'
