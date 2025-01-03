@@ -57,7 +57,7 @@ function getMonthName(monthNumber) {
 }
 
 const ExpenseBarChart = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState("monthly");
+  const [selectedPeriod, setSelectedPeriod] = useState(2025);
 
   const [data, setData] = useState([]);
 
@@ -65,7 +65,7 @@ const ExpenseBarChart = () => {
     const fetchMonth = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/getSummary?year=2025",
+          `http://localhost:5000/getSummary?year=${selectedPeriod}`,
           {
             method: "GET",
             headers: {
@@ -194,6 +194,17 @@ const ExpenseBarChart = () => {
       <div className="mb-5 flex items-center justify-between">
         <h5 className="text-2xl font-semibold text-gray-200">
           Expense by Month
+          <select
+            value={selectedPeriod}
+            onChange={(e) => setSelectedPeriod(e.target.value)}
+            className="ml-4 rounded-md bg-gray-700 text-gray-200"
+          >
+            {Array.from({ length: 26 }, (_, i) => (
+              <option key={2000 + i} value={2000 + i}>
+              {2000 + i}
+              </option>
+            ))}
+          </select>
         </h5>
       </div>
 
