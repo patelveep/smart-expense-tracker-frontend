@@ -278,7 +278,7 @@ export default function TransactionHistoryTable() {
       </table>
       <div className="flex justify-between items-center mt-4">
         <p>
-          Showing {itemsPerPage} of {filteredTransactions.length}
+          Showing { itemsPerPage > filteredTransactions.length ? filteredTransactions.length:itemsPerPage} of {filteredTransactions.length}
         </p>
         <div className="flex space-x-2">
           <nav aria-label="Page navigation example">
