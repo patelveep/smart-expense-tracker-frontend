@@ -1,6 +1,6 @@
 "use client";
 import { ApexOptions } from "apexcharts";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 
 // Function to generate colors that repeat when categories exceed available colors
@@ -26,28 +26,55 @@ const generateRepeatingColors = (num) => {
     "#9E9E9E",
     "#607D8B",
   ];
-  return Array.from({ length: num }, (_, i) => materialColors[i % materialColors.length]);
+  return Array.from(
+    { length: num },
+    (_, i) => materialColors[i % materialColors.length]
+  );
 };
 
 const ExpenseByCatCharts = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("monthly");
+  const [categories, setCategories] = useState([]);
 
-  const categories = [
-    { category: "Food", expense: 1200 },
-    { category: "Transport", expense: 500 },
-    { category: "Shopping", expense: 200 },
-    { category: "Others", expense: 100 },
-    { category: "Health", expense: 800 },
-    { category: "Entertainment", expense: 300 },
-  ];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/getSummary", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+
+        const data = await response.json();
+        const cat = data?.groupedByCategory?.map((cat) => {
+          return {
+            category: cat.category,
+            expense: cat.totalAmount,
+          };
+        });
+
+        console.log("cat", cat);
+        setCategories(cat);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, [selectedPeriod]);
 
   const options: ApexOptions = {
     chart: {
       fontFamily: "Satoshi, sans-serif",
       type: "donut",
     },
-    colors: generateRepeatingColors(categories.length),
-    labels: categories.map((cat) => cat.category),
+    colors: generateRepeatingColors(categories?.length),
+    labels: categories?.map((cat) => cat?.category),
     legend: {
       show: false,
       position: "bottom",
@@ -83,7 +110,7 @@ const ExpenseByCatCharts = () => {
     ],
   };
 
-  const series = categories.map((cat) => cat.expense);
+  const series = categories?.map((cat) => cat.expense);
 
   const handlePeriodChange = (event) => {
     setSelectedPeriod(event.target.value);
@@ -114,7 +141,7 @@ const ExpenseByCatCharts = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6">
-        {categories.map((category, index) => (
+        {categories?.map((category, index) => (
           <div
             key={index}
             className="flex items-center space-x-3 rounded-lg bg-gray-100 p-4 dark:bg-gray-700"
@@ -125,7 +152,13 @@ const ExpenseByCatCharts = () => {
             ></span>
             <p className="flex flex-1 justify-between text-sm font-medium text-gray-800 dark:text-gray-200">
               <span>{category.category}</span>
-              <span>{((category.expense / series.reduce((a, b) => a + b, 0)) * 100).toFixed(1)}%</span>
+              <span>
+                {(
+                  (category.expense / series.reduce((a, b) => a + b, 0)) *
+                  100
+                ).toFixed(1)}
+                %
+              </span>
             </p>
           </div>
         ))}
